@@ -1,7 +1,3 @@
-[submodule "wine"]
-	path = wine
-	url = https://github.com/moio9/wine.git
-	branch = arm64ec
 [submodule "fex"]
 	path = fex
 	url = https://github.com/AndreRH/FEX.git
