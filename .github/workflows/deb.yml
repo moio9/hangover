@@ -329,6 +329,12 @@ jobs:
     - name: Import docker image
       run: docker image load -i foundation${{ matrix.os }}.tgz
 
+    - name: Cache wine build
+      uses: actions/cache@v4
+      with:
+        path: wine-build-${{ matrix.os }}
+        key: ${{ runner.os }}-wine-${{ matrix.os }}-${{ hashFiles('wine/**', '.packaging/{0}/wine/**') }}
+
     - name: get version
       run: git describe --tags | sed "s/hangover-/HOVERSION=/" >> "$GITHUB_ENV"; git describe --tags | sed "s/hangover-/HOVERSION=/"
 
@@ -372,6 +378,7 @@ jobs:
         cat wine/debian/changelog
 
     - name: Build package
+      if: steps.cache-wine.outputs.cache-hit != 'true'
       run: cd wine; docker build -t wine${{ matrix.os }} .
 
     - name: Extract package
